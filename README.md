@@ -103,13 +103,6 @@ Your custom context will be rendered from any Jinja2 template.
 
 ---
 
-## 📦 Installation (Optional PyPI Usage)
-
-You can also install it globally:
-
-```bash
-pip install project-scanner
-```
 
 And run it from anywhere:
 
