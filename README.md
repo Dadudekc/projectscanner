@@ -56,7 +56,7 @@ No setup. No boilerplate. Just insight.
 ### 1. Clone or copy the file
 
 ```bash
-wget https://raw.githubusercontent.com/YOUR_GITHUB/project-scanner/main/project_scanner.py
+wget https://raw.githubusercontent.com/Dadudekc/projectscanner/main/ProjectScanner.py
 ```
 
 ### 2. Run it on your codebase
