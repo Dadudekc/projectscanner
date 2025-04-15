@@ -346,17 +346,33 @@ class FileProcessor:
             return ""
 
     def should_exclude(self, file_path: Path) -> bool:
-        """Exclude logic for venv, node_modules, .git, etc."""
-        default_exclude_dirs = {
-            "venv", "__pycache__", "node_modules", "migrations", "build",
-            "target", ".git", "coverage", "chrome_profile"
+        """Exclude logic for venvs, node_modules, .git, etc."""
+        # Common virtual environment patterns
+        venv_patterns = {
+            "venv", "env", ".env", ".venv", "virtualenv", 
+            "ENV", "VENV", ".ENV", ".VENV",
+            "python-env", "python-venv", "py-env", "py-venv",
+            # Common Conda environment locations
+            "envs", "conda-env", ".conda-env",
+            # Poetry virtual environments
+            ".poetry/venv", ".poetry-venv"
         }
+        
+        default_exclude_dirs = {
+            "__pycache__", "node_modules", "migrations", "build",
+            "target", ".git", "coverage", "chrome_profile"
+        } | venv_patterns  # Merge with venv patterns
+        
         file_abs = file_path.resolve()
+        
+        # Check if this is the scanner itself
         try:
             if file_abs == Path(__file__).resolve():
                 return True
         except NameError:
             pass
+            
+        # Check additional ignore directories
         for ignore in self.additional_ignore_dirs:
             ignore_path = Path(ignore)
             if not ignore_path.is_absolute():
@@ -366,8 +382,32 @@ class FileProcessor:
                 return True
             except ValueError:
                 continue
+                
+        # Check for virtual environment indicators
+        try:
+            # Look for pyvenv.cfg or similar files that indicate a venv
+            if any(p.name == "pyvenv.cfg" for p in file_abs.parents):
+                return True
+            
+            # Look for bin/activate or Scripts/activate.bat
+            for parent in file_abs.parents:
+                if (parent / "bin" / "activate").exists() or \
+                   (parent / "Scripts" / "activate.bat").exists():
+                    return True
+        except (OSError, PermissionError):
+            # Handle permission errors gracefully
+            pass
+            
+        # Check for excluded directory names in the path
         if any(excluded in file_path.parts for excluded in default_exclude_dirs):
             return True
+            
+        # Check for common virtual environment path patterns
+        path_str = str(file_abs).lower()
+        if any(f"/{pattern}/" in path_str.replace("\\", "/") 
+               for pattern in venv_patterns):
+            return True
+            
         return False
 
     def process_file(self, file_path: Path, language_analyzer: LanguageAnalyzer) -> Optional[tuple]:
