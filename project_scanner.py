@@ -23,7 +23,7 @@ except ImportError:
 # Project Config / Cache File Setup
 # ---------------------------------
 CACHE_FILE = "dependency_cache.json"
-
+# Faster to delete and have it rewrite the whole thing(dependency_cache.json)...ngl
 # We'll store our final "project_analysis.json" and "chatgpt_project_context.json"
 # in the project root, merging new data with old each time.
 
