@@ -12,7 +12,9 @@ ProjectScanner is a **drop-in codebase analyzer** that generates high-level stru
 - Generate:
   - `project_analysis.json` — developer-level overview
   - `chatgpt_project_context.json` — LLM-ready context prompt
-
+Summary Judgment:
+→ Use chatgpt_project_context.json when you want project-wide architectural moves.
+→ Use project_analysis.json if you're doing targeted refactors or fast file-by-file tasking.
 No setup. No boilerplate. Just insight.
 
 ---
@@ -163,6 +165,4 @@ build-backend = "setuptools.build_meta"
 git add project_scanner.py setup.py pyproject.toml README.md
 git commit -m "🚀 OSS Release: ProjectScanner v0.1 — drop-in LLM context generator"
 ```
-Summary Judgment:
-→ Use chatgpt_project_context.json when you want project-wide architectural moves.
-→ Use project_analysis.json if you're doing targeted refactors or fast file-by-file tasking.
+
