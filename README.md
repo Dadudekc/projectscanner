@@ -6,7 +6,7 @@
 
 ProjectScanner is a **drop-in codebase analyzer** that generates high-level structural intelligence for LLMs like ChatGPT, Cursor, and Claude.
 
-🪄 **Just drop `project_scanner.py` into any folder and run it.** It will:
+🪄 **Install the `projectscanner` package and run it.** It will:
 - Detect all Python, Rust, JS, and TS files
 - Extract functions, classes, routes, and complexity
 - Generate:
@@ -21,16 +21,16 @@ No setup. No boilerplate. Just insight.
 
 ## 🚀 Quick Start
 
-### 1. Clone or copy the file
+### 1. Install the package
 
 ```bash
-wget https://raw.githubusercontent.com/Dadudekc/projectscanner/main/ProjectScanner.py
+pip install projectscanner
 ```
 
 ### 2. Run it on your codebase
 
 ```bash
-python project_scanner.py --project-root . --categorize-agents --generate-init
+project-scanner --project-root . --categorize-agents --generate-init
 ```
 
 ### 3. Results
@@ -64,7 +64,7 @@ python project_scanner.py --project-root . --categorize-agents --generate-init
 ## 🔌 Jinja Template Export (Optional)
 
 ```bash
-python project_scanner.py --template context_template.j2 --output context.md
+project-scanner --template context_template.j2 --output context.md
 ```
 
 Your custom context will be rendered from any Jinja2 template.
@@ -162,7 +162,7 @@ build-backend = "setuptools.build_meta"
 ## ✅ Git Commit Suggestion
 
 ```bash
-git add project_scanner.py setup.py pyproject.toml README.md
+git add projectscanner project_scanner.py setup.py pyproject.toml README.md
 git commit -m "🚀 OSS Release: ProjectScanner v0.1 — drop-in LLM context generator"
 ```
 
