@@ -114,7 +114,7 @@ class ProjectScanner:
         self.save_cache()
         logger.info(
             "✅ Scan complete. Results merged into %s",
-            self.project_root / "project_analysis.json",
+            self.project_root / self.report_generator.analysis_file,
         )
 
     def _process_file(self, file_path: Path):
