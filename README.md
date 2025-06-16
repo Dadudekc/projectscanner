@@ -10,11 +10,11 @@ ProjectScanner is a **drop-in codebase analyzer** that generates high-level stru
 - Detect all Python, Rust, JS, and TS files
 - Extract functions, classes, routes, and complexity
 - Generate:
-  - `project_analysis.json` — developer-level overview
-  - `chatgpt_project_context.json` — LLM-ready context prompt
+  - `project_analysis_<project>.json` — developer-level overview
+  - `chatgpt_project_context_<project>.json` — LLM-ready context prompt
 Summary Judgment:
-→ Use chatgpt_project_context.json when you want project-wide architectural moves.
-→ Use project_analysis.json if you're doing targeted refactors or fast file-by-file tasking.
+→ Use `chatgpt_project_context_<project>.json` when you want project-wide architectural moves.
+→ Use `project_analysis_<project>.json` if you're doing targeted refactors or fast file-by-file tasking.
 No setup. No boilerplate. Just insight.
 
 ---
@@ -35,8 +35,8 @@ project-scanner --project-root . --categorize-agents --generate-init
 
 ### 3. Results
 
-- `project_analysis.json`: structural map of your codebase
-- `chatgpt_project_context.json`: ready to paste into ChatGPT or Cursor
+- `project_analysis_<project>.json`: structural map of your codebase
+- `chatgpt_project_context_<project>.json`: ready to paste into ChatGPT or Cursor
 
 ---
 
@@ -58,6 +58,7 @@ project-scanner --project-root . --categorize-agents --generate-init
 - 🧠 Class maturity & agent-type classification
 - ✨ Tree-sitter support (Rust, JS/TS, optional)
 - 🧩 JSON & Jinja output for AI pipelines
+- 🖥️ PyQt5 viewer for browsing analysis results
 
 ---
 
@@ -88,7 +89,7 @@ project-scanner --project-root .
 | `--ignore`               | Additional folders to exclude               |
 | `--categorize-agents`    | Classify Python classes                     |
 | `--generate-init`        | Generate `__init__.py` files                |
-| `--no-chatgpt-context`   | Skip exporting `chatgpt_project_context.json` |
+| `--no-chatgpt-context`   | Skip exporting `chatgpt_project_context_<project>.json` |
 | `--template`             | Path to Jinja2 template                     |
 | `--output`               | Path to render final context                |
 

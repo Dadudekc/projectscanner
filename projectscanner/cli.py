@@ -40,13 +40,16 @@ def main():
     if args.categorize_agents:
         scanner.categorize_agents()
         scanner.report_generator.save_report()
-        logging.info("✅ Agent categorization complete. Updated project_analysis.json.")
+        logging.info(
+            "✅ Agent categorization complete. Updated %s",
+            scanner.report_generator.analysis_file,
+        )
 
     if not args.no_chatgpt_context:
         scanner.export_chatgpt_context()
         logging.info("✅ ChatGPT context exported by default.")
 
-        context_path = Path(args.project_root) / "chatgpt_project_context.json"
+        context_path = Path(args.project_root) / scanner.report_generator.context_file
         if context_path.exists():
             try:
                 with context_path.open("r", encoding="utf-8") as f:

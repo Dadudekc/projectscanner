@@ -5,6 +5,11 @@ from .file_processor import FileProcessor
 from .report_generator import ReportGenerator
 from .bots import BotWorker, MultibotManager
 
+try:
+    from .gui import AnalysisViewer
+except Exception:  # pragma: no cover - optional dependency
+    AnalysisViewer = None
+
 __all__ = [
     "ProjectScanner",
     "LanguageAnalyzer",
@@ -12,4 +17,5 @@ __all__ = [
     "ReportGenerator",
     "BotWorker",
     "MultibotManager",
+    "AnalysisViewer",
 ]

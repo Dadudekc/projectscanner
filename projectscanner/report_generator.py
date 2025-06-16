@@ -1,5 +1,6 @@
 import json
 import logging
+import re
 from pathlib import Path
 from typing import Dict, List
 
@@ -9,8 +10,11 @@ class ReportGenerator:
     """Handles merging new analysis with old reports."""
 
     def __init__(self, project_root: Path, analysis: Dict[str, Dict]):
-        self.project_root = project_root
+        self.project_root = Path(project_root).resolve()
         self.analysis = analysis
+        name = re.sub(r"[^A-Za-z0-9_.-]", "_", self.project_root.name)
+        self.analysis_file = f"project_analysis_{name}.json"
+        self.context_file = f"chatgpt_project_context_{name}.json"
 
     # --- helper methods ---
     def load_existing_report(self, report_path: Path) -> Dict:
@@ -23,7 +27,7 @@ class ReportGenerator:
         return {}
 
     def save_report(self):
-        report_path = self.project_root / "project_analysis.json"
+        report_path = self.project_root / self.analysis_file
         existing_report = self.load_existing_report(report_path)
         merged = {**existing_report, **self.analysis}
         try:
@@ -60,7 +64,7 @@ class ReportGenerator:
         return {}
 
     def export_chatgpt_context(self, template_path: str = None, output_path: str = None):
-        context_path = self.project_root / (output_path or "chatgpt_project_context.json")
+        context_path = self.project_root / (output_path or self.context_file)
         if template_path is None:
             existing_context = self.load_existing_chatgpt_context(context_path)
             payload = {
