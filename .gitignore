@@ -1,0 +1,6 @@
+__pycache__/
+*.pyc
+.dependency_cache.json
+dependency_cache.json
+.project_scanner.log
+.pytest_cache/
