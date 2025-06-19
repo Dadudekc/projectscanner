@@ -1,169 +1,60 @@
-## 🗂 `README.md`
+# ProjectScanner
 
+[![Python](https://img.shields.io/badge/python-3.12+-blue.svg)](https://www.python.org/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-```markdown
-# 🔍 ProjectScanner — One-file Context Generator for LLMs & Devs
+ProjectScanner is a lightweight codebase analysis tool written in Python. It quickly scans a project directory, extracts high‑level structure and produces JSON reports that are easy to feed into language models or other automation tools.
 
-ProjectScanner is a **drop-in codebase analyzer** that generates high-level structural intelligence for LLMs like ChatGPT, Cursor, and Claude.
+Victor built this project to showcase the ability to orchestrate automation workflows around large code bases and LLM driven systems.
 
-🪄 **Install the `projectscanner` package and run it.** It will:
-- Detect all Python, Rust, JS, and TS files
-- Extract functions, classes, routes, and complexity
-- Generate:
-  - `project_analysis_<project>.json` — developer-level overview
-  - `chatgpt_project_context_<project>.json` — LLM-ready context prompt
-Summary Judgment:
-→ Use `chatgpt_project_context_<project>.json` when you want project-wide architectural moves.
-→ Use `project_analysis_<project>.json` if you're doing targeted refactors or fast file-by-file tasking.
-No setup. No boilerplate. Just insight.
+## Features
 
----
+- **Multi‑language parsing** – supports Python, Rust and JavaScript/TypeScript files.
+- **Asynchronous scanning** – uses worker threads to process files concurrently.
+- **Caching** – remembers previous results to avoid unnecessary work.
+- **Agent classification** – optional maturity and agent‑type scoring for Python classes.
+- **ChatGPT context export** – generates a trimmed JSON payload for LLM prompts.
+- **Optional GUI** – PyQt5 viewer for browsing the generated reports.
 
-## 🚀 Quick Start
+## Quick start
 
-### 1. Install the package
+1. Install the package (edit `PYTHONPATH` or package as desired):
+   ```bash
+   pip install -e .
+   ```
+2. Run the scanner from the project root:
+   ```bash
+   project-scanner --project-root .
+   ```
+3. Two JSON files will be created:
+   - `project_analysis_<name>.json` – merged summary of all files.
+   - `chatgpt_project_context_<name>.json` – minimal context for LLM usage.
 
-```bash
-pip install projectscanner
+### Optional flags
+
+- `--categorize-agents` – add maturity/agent type details to classes.
+- `--generate-init` – auto create `__init__.py` files in packages.
+- `--no-chatgpt-context` – skip LLM context export.
+
+## Architecture
+
+```
+CLI -> ProjectScanner -> MultibotManager -> BotWorker threads
+                 |            |
+                 |            +-- FileProcessor (hashing & caching)
+                 |            |
+                 |            +-- LanguageAnalyzer (AST parsing)
+                 +-- ReportGenerator (JSON export)
 ```
 
-### 2. Run it on your codebase
+The CLI initializes `ProjectScanner`, which spawns multiple `BotWorker` threads via `MultibotManager`. Each worker hands a file to `LanguageAnalyzer` for AST parsing and `FileProcessor` for caching. `ReportGenerator` merges results and writes the final JSON reports.
 
-```bash
-project-scanner --project-root . --categorize-agents --generate-init
-```
+## What this project demonstrates
 
-### 3. Results
+- Practical use of AST parsing and code introspection.
+- Thread‑based orchestration for I/O bound workloads.
+- Clean JSON outputs for downstream automation or LLM prompts.
 
-- `project_analysis_<project>.json`: structural map of your codebase
-- `chatgpt_project_context_<project>.json`: ready to paste into ChatGPT or Cursor
+## Contributing & License
 
----
-
-## 💡 Why Use This?
-
-| For Developers         | For LLM Workflows               |
-|------------------------|---------------------------------|
-| Understand unknown codebases | Feed compressed project context |
-| Detect structural drift | Boost prompt accuracy          |
-| Auto-generate init files | Analyze agent maturity         |
-
----
-
-## 🧰 Features
-
-- ✅ **Single-file CLI** — drop into any repo
-- 🚀 Async multithreaded scanning
-- 📦 Auto `__init__.py` generation
-- 🧠 Class maturity & agent-type classification
-- ✨ Tree-sitter support (Rust, JS/TS, optional)
-- 🧩 JSON & Jinja output for AI pipelines
-- 🖥️ PyQt5 viewer for browsing analysis results
-
----
-
-## 🔌 Jinja Template Export (Optional)
-
-```bash
-project-scanner --template context_template.j2 --output context.md
-```
-
-Your custom context will be rendered from any Jinja2 template.
-
----
-
-
-And run it from anywhere:
-
-```bash
-project-scanner --project-root .
-```
-
----
-
-## 🛠 CLI Flags
-
-| Flag                     | Description                                 |
-|--------------------------|---------------------------------------------|
-| `--project-root`         | Root directory to scan                      |
-| `--ignore`               | Additional folders to exclude               |
-| `--categorize-agents`    | Classify Python classes                     |
-| `--generate-init`        | Generate `__init__.py` files                |
-| `--no-chatgpt-context`   | Skip exporting `chatgpt_project_context_<project>.json` |
-| `--template`             | Path to Jinja2 template                     |
-| `--output`               | Path to render final context                |
-
----
-
-## 🧠 What’s Next?
-
-This project is free and open source. In the future:
-- A browser-based dashboard
-- LLM plugin mode (Cursor, OpenDevin, VSCode)
-- Premium templates and agent context enrichment
-
----
-
-## 🙏 Contributions Welcome
-
-Issues, ideas, and PRs are all welcome.
-
----
-
-## License
-
-MIT
-```
-
----
-
-## 📦 `setup.py`
-
-```python
-# setup.py
-from setuptools import setup
-
-setup(
-    name="project-scanner",
-    version="0.1.0",
-    py_modules=["project_scanner"],
-    install_requires=[
-        "jinja2",
-        "tree_sitter ; platform_system != 'Windows'",  # optional for Rust/JS parsing
-    ],
-    entry_points={
-        "console_scripts": [
-            "project-scanner = project_scanner:main"
-        ]
-    },
-    author="Your Name",
-    description="Drop-in project scanner for generating LLM context and codebase intelligence.",
-    long_description=open("README.md").read(),
-    long_description_content_type="text/markdown",
-    url="https://github.com/YOUR_GITHUB/project-scanner",
-    classifiers=[
-        "Programming Language :: Python :: 3",
-        "License :: OSI Approved :: MIT License",
-    ],
-)
-```
-
----
-
-## 🧰 `pyproject.toml` (optional if using `setup.py`)
-
-```toml
-[build-system]
-requires = ["setuptools"]
-build-backend = "setuptools.build_meta"
-```
-
----
-
-## ✅ Git Commit Suggestion
-
-```bash
-git add projectscanner project_scanner.py setup.py pyproject.toml README.md
-git commit -m "🚀 OSS Release: ProjectScanner v0.1 — drop-in LLM context generator"
-```
-
+Issues and pull requests are welcome. This project is released under the [MIT License](LICENSE).

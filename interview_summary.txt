@@ -1,0 +1,3 @@
+**How to present this project**
+
+ProjectScanner demonstrates Victor's ability to build automation around large codebases. It showcases multithreaded file processing, AST analysis across several languages and exporting structured context for use with LLMs. In an interview, emphasize that the tool is intentionally small yet integrates caching, agent classification and a minimal GUI, proving capability to engineer end‑to‑end developer tooling.
