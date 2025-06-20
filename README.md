@@ -3,40 +3,18 @@
 [![Python](https://img.shields.io/badge/python-3.12+-blue.svg)](https://www.python.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-ProjectScanner is a lightweight codebase analysis tool written in Python. It quickly scans a project directory, extracts high‑level structure and produces JSON reports that are easy to feed into language models or other automation tools.
+ProjectScanner is a lightweight tool for generating a structured overview of a codebase. It scans Python, Rust and JavaScript/TypeScript files and produces JSON reports that are easy to feed into language models or other automation systems. The project demonstrates multithreaded file processing, AST analysis and incremental caching.
 
-Victor built this project to showcase the ability to orchestrate automation workflows around large code bases and LLM driven systems.
+## Key Features
 
-## Features
+- **Multi‑language parsing** – Python, Rust and JS/TS support
+- **Concurrent scanning** – worker threads handle files in parallel
+- **Incremental caching** – skip previously processed files
+- **Agent categorisation** – classify Python classes by maturity level and type
+- **ChatGPT context export** – minimal JSON payload for LLM prompts
+- **Optional GUI** – browse reports with a small PyQt5 viewer
 
-- **Multi‑language parsing** – supports Python, Rust and JavaScript/TypeScript files.
-- **Asynchronous scanning** – uses worker threads to process files concurrently.
-- **Caching** – remembers previous results to avoid unnecessary work.
-- **Agent classification** – optional maturity and agent‑type scoring for Python classes.
-- **ChatGPT context export** – generates a trimmed JSON payload for LLM prompts.
-- **Optional GUI** – PyQt5 viewer for browsing the generated reports.
-
-## Quick start
-
-1. Install the package (edit `PYTHONPATH` or package as desired):
-   ```bash
-   pip install -e .
-   ```
-2. Run the scanner from the project root:
-   ```bash
-   project-scanner --project-root .
-   ```
-3. Two JSON files will be created:
-   - `project_analysis_<name>.json` – merged summary of all files.
-   - `chatgpt_project_context_<name>.json` – minimal context for LLM usage.
-
-### Optional flags
-
-- `--categorize-agents` – add maturity/agent type details to classes.
-- `--generate-init` – auto create `__init__.py` files in packages.
-- `--no-chatgpt-context` – skip LLM context export.
-
-## Architecture
+## Architecture Overview
 
 ```
 CLI -> ProjectScanner -> MultibotManager -> BotWorker threads
@@ -47,14 +25,53 @@ CLI -> ProjectScanner -> MultibotManager -> BotWorker threads
                  +-- ReportGenerator (JSON export)
 ```
 
-The CLI initializes `ProjectScanner`, which spawns multiple `BotWorker` threads via `MultibotManager`. Each worker hands a file to `LanguageAnalyzer` for AST parsing and `FileProcessor` for caching. `ReportGenerator` merges results and writes the final JSON reports.
+The CLI creates a `ProjectScanner` which spawns `BotWorker` threads via `MultibotManager`. Each worker uses `LanguageAnalyzer` and `FileProcessor` to parse and cache results, then `ReportGenerator` merges everything into JSON.
 
-## What this project demonstrates
+## Setup
 
-- Practical use of AST parsing and code introspection.
-- Thread‑based orchestration for I/O bound workloads.
-- Clean JSON outputs for downstream automation or LLM prompts.
+1. Clone this repository and install the package in editable mode:
+   ```bash
+   pip install -e .
+   ```
+2. (Optional) Install `PyQt5` if you want to use the GUI viewer:
+   ```bash
+   pip install PyQt5
+   ```
+
+## Usage
+
+Run the scanner from a project directory:
+
+```bash
+project-scanner --project-root .
+```
+
+The command creates two files in the root:
+
+- `project_analysis_<name>.json` – merged summary of all files
+- `chatgpt_project_context_<name>.json` – reduced context for ChatGPT
+
+Useful flags:
+
+- `--categorize-agents` – add maturity/agent type details to classes
+- `--generate-init` – automatically create `__init__.py` files
+- `--no-chatgpt-context` – skip the ChatGPT context export
+
+To inspect the results visually, launch the GUI:
+
+```bash
+python -m projectscanner.gui <project_root>
+```
+
+## Running Tests
+
+Tests are written with `pytest` and cover the core analysis logic. Execute:
+
+```bash
+pytest
+```
 
 ## Contributing & License
 
-Issues and pull requests are welcome. This project is released under the [MIT License](LICENSE).
+Contributions are welcome via pull requests. This project is released under the [MIT License](LICENSE).
+
