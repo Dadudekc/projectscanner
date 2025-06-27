@@ -56,6 +56,7 @@ Useful flags:
 - `--categorize-agents` – add maturity/agent type details to classes
 - `--generate-init` – automatically create `__init__.py` files
 - `--no-chatgpt-context` – skip the ChatGPT context export
+- `--output-dir` – directory to store generated JSON reports
 
 To inspect the results visually, launch the GUI:
 

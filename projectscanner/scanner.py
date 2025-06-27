@@ -16,8 +16,9 @@ logger = logging.getLogger(__name__)
 class ProjectScanner:
     """Main orchestrator for analyzing projects."""
 
-    def __init__(self, project_root: Union[str, Path] = "."):
+    def __init__(self, project_root: Union[str, Path] = ".", output_dir: Optional[Union[str, Path]] = None):
         self.project_root = Path(project_root).resolve()
+        self.output_dir = Path(output_dir).resolve() if output_dir else self.project_root
         self.analysis: Dict[str, Dict] = {}
         self.cache = self.load_cache()
         self.cache_lock = threading.Lock()
@@ -29,7 +30,7 @@ class ProjectScanner:
             self.cache_lock,
             self.additional_ignore_dirs,
         )
-        self.report_generator = ReportGenerator(self.project_root, self.analysis)
+        self.report_generator = ReportGenerator(self.project_root, self.analysis, self.output_dir)
 
     # --- Cache helpers ---
     def load_cache(self) -> Dict:
@@ -114,7 +115,7 @@ class ProjectScanner:
         self.save_cache()
         logger.info(
             "✅ Scan complete. Results merged into %s",
-            self.project_root / self.report_generator.analysis_file,
+            self.output_dir / self.report_generator.analysis_file,
         )
 
     def _process_file(self, file_path: Path):

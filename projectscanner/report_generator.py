@@ -9,8 +9,9 @@ logger = logging.getLogger(__name__)
 class ReportGenerator:
     """Handles merging new analysis with old reports."""
 
-    def __init__(self, project_root: Path, analysis: Dict[str, Dict]):
+    def __init__(self, project_root: Path, analysis: Dict[str, Dict], output_dir: Path | None = None):
         self.project_root = Path(project_root).resolve()
+        self.output_dir = Path(output_dir).resolve() if output_dir else self.project_root
         self.analysis = analysis
         name = re.sub(r"[^A-Za-z0-9_.-]", "_", self.project_root.name)
         self.analysis_file = f"project_analysis_{name}.json"
@@ -27,7 +28,7 @@ class ReportGenerator:
         return {}
 
     def save_report(self):
-        report_path = self.project_root / self.analysis_file
+        report_path = self.output_dir / self.analysis_file
         existing_report = self.load_existing_report(report_path)
         merged = {**existing_report, **self.analysis}
         try:
@@ -63,8 +64,8 @@ class ReportGenerator:
                 pass
         return {}
 
-    def export_chatgpt_context(self, template_path: str = None, output_path: str = None):
-        context_path = self.project_root / (output_path or self.context_file)
+    def export_chatgpt_context(self, template_path: str = None, output_path: str | None = None):
+        context_path = self.output_dir / (output_path or self.context_file)
         if template_path is None:
             existing_context = self.load_existing_chatgpt_context(context_path)
             payload = {
