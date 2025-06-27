@@ -27,9 +27,14 @@ def main():
     parser.add_argument(
         "--generate-init", action="store_true", help="Enable auto-generating __init__.py files."
     )
+    parser.add_argument(
+        "--output-dir",
+        default=None,
+        help="Directory to store generated JSON reports.",
+    )
     args = parser.parse_args()
 
-    scanner = ProjectScanner(project_root=args.project_root)
+    scanner = ProjectScanner(project_root=args.project_root, output_dir=args.output_dir)
     scanner.additional_ignore_dirs = set(args.ignore)
 
     scanner.scan_project()
@@ -49,7 +54,7 @@ def main():
         scanner.export_chatgpt_context()
         logging.info("✅ ChatGPT context exported by default.")
 
-        context_path = Path(args.project_root) / scanner.report_generator.context_file
+        context_path = scanner.output_dir / scanner.report_generator.context_file
         if context_path.exists():
             try:
                 with context_path.open("r", encoding="utf-8") as f:
