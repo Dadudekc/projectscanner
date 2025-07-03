@@ -13,6 +13,7 @@ ProjectScanner is a lightweight tool for generating a structured overview of a c
 - **Agent categorisation** – classify Python classes by maturity level and type
 - **ChatGPT context export** – minimal JSON payload for LLM prompts
 - **Optional GUI** – browse reports with a small PyQt5 viewer
+- **Complexity metrics** – reports include simple complexity counts and lint suggestions
 
 ## Architecture Overview
 

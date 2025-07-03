@@ -5,12 +5,12 @@ This sprint aims to move ProjectScanner toward a beta-ready release. The tasks b
 ## High Priority
 - [ ] Bundle tree-sitter grammars for Rust and JavaScript
 - [ ] Implement initial plugin architecture for additional languages
-- [ ] Expand complexity metrics and provide lint suggestions
-- [ ] Add CLI option to specify custom output directory *(in progress)*
+- [x] Expand complexity metrics and provide lint suggestions
+- [x] Add CLI option to specify custom output directory
 - [ ] Expand unit & integration test coverage for CLI and caching logic
 - [ ] Verify agent categorisation is included in reports
-- [ ] Validate `__init__.py` generation toggle works
-- [ ] Ensure ChatGPT context export succeeds
+- [x] Validate `__init__.py` generation toggle works
+- [x] Ensure ChatGPT context export succeeds
 - [ ] Update documentation for new CLI flags and plugin usage
 
 ## Medium Priority
