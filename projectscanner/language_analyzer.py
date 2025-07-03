@@ -109,13 +109,32 @@ class LanguageAnalyzer:
                     "docstring": docstring,
                     "base_classes": base_classes,
                 }
-        complexity = len(functions) + sum(len(c["methods"]) for c in classes.values())
+
+        loops = sum(isinstance(n, (ast.For, ast.While)) for n in ast.walk(tree))
+        branches = sum(isinstance(n, (ast.If, ast.Try)) for n in ast.walk(tree))
+        complexity = (
+            len(functions)
+            + sum(len(c["methods"]) for c in classes.values())
+            + loops
+            + branches
+        )
+
+        lint_suggestions = []
+        for node in ast.walk(tree):
+            if isinstance(node, ast.FunctionDef):
+                if hasattr(node, "end_lineno") and node.end_lineno:
+                    if node.end_lineno - node.lineno > 50:
+                        lint_suggestions.append(f"Function {node.name} >50 lines")
+        if complexity > 10:
+            lint_suggestions.append("High complexity")
+
         return {
             "language": ".py",
             "functions": functions,
             "classes": classes,
             "routes": routes,
             "complexity": complexity,
+            "lint": lint_suggestions,
         }
 
     # -------- Rust ---------
